@@ -29,7 +29,10 @@ app.use(
 
 // @ts-ignore
 import todoRouter from "./routes/todo.ts";
+// @ts-ignore
+import userRouter from "./routes/user.ts";
 app.use(todoRouter.routes());
+app.use(userRouter.routes());
 app.use(todoRouter.allowedMethods());
 
 

@@ -18,7 +18,37 @@ router
    .post("/todos", todoController.createTodo)
    .get("/todos/:id", todoController.getTodoById)
    .put("/todos/:id", todoController.updateTodoById)
-   .delete("/todos/:id", todoController.deleteTodoById)
-   .post("/user", todoController.createUser);
+   .delete("/todos/:id", todoController.deleteTodoById);
 
 export default router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
