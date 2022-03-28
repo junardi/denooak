@@ -20,11 +20,13 @@ const port: number = 8000;
 
 // app.use(oakCors({ origin: "*" }));
 
-app.use(
-   oakCors({
-      origin: "http://localhost:4200"
-   }),
-);
+// app.use(
+//    oakCors({
+//       origin: "http://localhost:4200"
+//    }),
+// );
+
+app.use(oakCors());
 
 
 // @ts-ignore

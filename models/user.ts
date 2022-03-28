@@ -25,6 +25,19 @@ export default {
       );
 
    },
+   doLogin: async(
+      { username, password }: any
+   ) => {
+
+      console.log(username);
+      console.log(password);
+
+      return await client.query(
+         `select * from ${TABLE.USERS} where username = ? and password = ?`,
+         [username, password],
+      )
+
+   }
 
 
 }
