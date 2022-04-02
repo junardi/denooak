@@ -67,6 +67,14 @@ export default {
          `select * from ${TABLE.FILES} where id = ?`,
          [id]
       )
+   },
+   deleteFileById: async(
+      { id }: any
+   ) => {
+      return await client.query(
+         `delete from ${TABLE.FILES} where id = ?`,
+         [id]
+      )
    }
 
 }

@@ -294,17 +294,48 @@ export default {
         { id: Number(params.id) },                         
       );
 
-      console.log(fileData);
-
-		
-		console.log(fileData[0].original_name);
-	
-     
+    
       const text = await Deno.readFile(`uploaded-files/${fileData[0].original_name}`);
 	
 		response.status = 200;
 		response.body = text;
 		response.headers.set("Content-Type", fileData[0].content_type);
+
+	},
+	deleteFile: async(
+		{ params, response }: { params: { id: string }; response: any },
+	) => {
+
+		try {
+
+			const fileData = await UserModel.getFileByid(
+	        { id: Number(params.id) },                         
+	      );
+
+			await Deno.remove(`uploaded-files/${fileData[0].original_name}`);
+
+			await UserModel.deleteFileById(
+	        { id: Number(params.id) },                         
+	      );
+
+
+	      response.status = 200;
+         response.body = {
+            success: true,
+            message: "Deleted file",
+         };
+
+
+		} catch(error) {
+
+			response.status = 500;
+         response.body = {
+            success: false,
+            message: "Error deleting file",
+         };
+
+
+		}
 
 	}
 

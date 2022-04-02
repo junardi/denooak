@@ -14,7 +14,8 @@ router
    .post("/do-login", userController.doLogin)
    .post("/file-upload", userController.uploadFile)
    .post("/get-files", userController.getFiles)
-   .get("/download-file/:id", userController.downloadFile);
+   .get("/download-file/:id", userController.downloadFile)
+   .delete("/delete-file/:id", userController.deleteFile);
 
 
 
