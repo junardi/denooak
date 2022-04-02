@@ -102,6 +102,7 @@ export default {
 			};
 		}
 
+
 	},
 	testDownload: async({response}: { response: any }) => {
 
@@ -188,8 +189,124 @@ export default {
 
 		}
 
+	},	
+	uploadFile: async(
+		{ request, response }: { request: any; response: any },
+	) => {
 
-	}	
+		try {
+
+			const body = await request.body({ type: 'form-data'})
+			const data = await body.value.read({maxSize: 5000000})
+			console.log(data);
+			
+			// console.log(data.files[0]);
+			// console.log(data.files[0]['content']);
+
+			try {
+				await Deno.writeFile(`uploaded-files/${data.files[0]['originalName']}`, data.files[0]['content']);
+				
+				await UserModel.insertFile(
+          { content_type: data.files[0]['contentType'], original_name: data.files[0]['originalName'], user_id: parseInt(data.fields.user_id)}                   
+        );
+
+
+				console.log('success upload');
+			
+			} catch (e) {
+				console.error(e)
+			}
+
+			response.body = {
+				success: true,
+				message: "okay",
+			};
+
+
+		} catch(error) {
+			response.body = {
+				success: false,
+				message: "No data provided",
+			};
+		}
+
+	},
+	getFiles: async(
+		{ request, response }: {request: any, response: any}
+	) => {
+
+
+		try {
+
+			try {
+
+				const body = await request.body();
+				const values = await body.value;
+
+				const fileData = await UserModel.getFiles(
+	           { user_id: values.user_id },                         
+	         );
+
+				if(fileData.length) {
+					response.body = {
+		            success: true,
+		            data: fileData,
+		         };
+				} else {
+					response.body = {
+		            success: false,
+		            data: fileData,
+		         };
+				}
+
+			} catch(e) {
+				//console.log(e);
+
+				response.status = 400;
+				response.body = {
+					success: false,
+					message: `Error: ${e}`,
+				};
+			
+			}
+
+		} catch(e) {
+
+			if (!request.hasBody) {
+	         response.status = 400;
+	         response.body = {
+	            success: false,
+	            message: "No data provided",
+	         };
+	      }
+		
+
+		}
+
+
+	},
+	downloadFile: async(
+		{ params, response }: { params: { id: string }; response: any },
+	) => {
+
+
+		const fileData = await UserModel.getFileByid(
+        { id: Number(params.id) },                         
+      );
+
+      console.log(fileData);
+
+		
+		console.log(fileData[0].original_name);
+	
+     
+      const text = await Deno.readFile(`uploaded-files/${fileData[0].original_name}`);
+	
+		response.status = 200;
+		response.body = text;
+		response.headers.set("Content-Type", fileData[0].content_type);
+
+	}
 
 
 }

@@ -11,10 +11,14 @@ router
    .post("/user", userController.createUser)
    .post("/test-upload", userController.testUpload)
    .get("/test-download", userController.testDownload)
-   .post("/do-login", userController.doLogin);
+   .post("/do-login", userController.doLogin)
+   .post("/file-upload", userController.uploadFile)
+   .post("/get-files", userController.getFiles)
+   .get("/download-file/:id", userController.downloadFile);
 
 
-export default router;
+
+export default router; 
 
 
 

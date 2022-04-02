@@ -37,7 +37,47 @@ export default {
          [username, password],
       )
 
+   },
+   insertFile: async(
+      { content_type, original_name, user_id }: any
+   ) => {
+
+      return await client.query(
+         `INSERT INTO ${TABLE.FILES}(content_type, original_name, user_id) values(?, ?, ?)`,
+         [
+            content_type,
+            original_name,
+            user_id
+         ],
+      );
+
+   },
+   getFiles: async(
+      { user_id }: any
+   ) => {
+      return await client.query(
+         `select * from ${TABLE.FILES} where user_id = ?`,
+         [user_id]
+      )
+   },
+   getFileByid: async(
+      { id }: any
+   ) => {
+      return await client.query(
+         `select * from ${TABLE.FILES} where id = ?`,
+         [id]
+      )
    }
 
-
 }
+
+
+
+
+
+
+
+
+
+
+
