@@ -203,16 +203,17 @@ export default {
 			// console.log(data.files[0]);
 			// console.log(data.files[0]['content']);
 
+			console.log(Date.now());
+
 			try {
-				await Deno.writeFile(`uploaded-files/${data.files[0]['originalName']}`, data.files[0]['content']);
+
+				let name = Date.now() + data.files[0]['originalName'];
+				await Deno.writeFile(`uploaded-files/${name}`, data.files[0]['content']);
 				
 				await UserModel.insertFile(
-          { content_type: data.files[0]['contentType'], original_name: data.files[0]['originalName'], user_id: parseInt(data.fields.user_id)}                   
-        );
+	         	{ content_type: data.files[0]['contentType'], original_name: data.files[0]['originalName'], name: name, user_id: parseInt(data.fields.user_id)}                   
+	        	);
 
-
-				console.log('success upload');
-			
 			} catch (e) {
 				console.error(e)
 			}
@@ -295,7 +296,7 @@ export default {
       );
 
     
-      const text = await Deno.readFile(`uploaded-files/${fileData[0].original_name}`);
+      const text = await Deno.readFile(`uploaded-files/${fileData[0].name}`);
 	
 		response.status = 200;
 		response.body = text;
@@ -312,7 +313,7 @@ export default {
 	        { id: Number(params.id) },                         
 	      );
 
-			await Deno.remove(`uploaded-files/${fileData[0].original_name}`);
+			await Deno.remove(`uploaded-files/${fileData[0].name}`);
 
 			await UserModel.deleteFileById(
 	        { id: Number(params.id) },                         
@@ -337,7 +338,369 @@ export default {
 
 		}
 
+	},
+	addStudent: async(
+		{ request, response }: { request: any; response: any },
+	) => {
+
+		try {
+	      try {
+	         const body = await request.body();
+	         const values = await body.value;
+	         console.log();
+
+	         console.log(values);
+
+	         await UserModel.addStudent(values);
+	        
+
+	        //  await UserModel.addStudent({
+
+			      // last_name: values.lastName, 
+		       //   first_name: values.firstName,
+		       //   middle_name: values.middleName, 
+		       //   id_number: values.idNumber, 
+		       //   lrn: values.lrn, 
+		       //   course: values.course, 
+		       //   current_year_level: values.currentYearLevel, 
+		       //   section: values.section, 
+		       //   sex: values.sex, 
+		       //   gender: values.gender, 
+		       //   civil_status: values.civilStatus, 
+		       //   address: values.address, 
+		       //   mothers_maiden_name: values.mothersMaidenName, 
+		       //   fathers_name: values.fathersName, 
+		       //   is_member_of_ips: values.isMemberOfIps, 
+		       //   tribe: values.tribe, 
+		       //   with_disability: values.withDisability, 
+		       //   user_id: values.userId 
+	        //   });
+
+	         response.body = {
+	            success: true,
+	            message: "The record was added successfully",
+	         };
+
+	      } catch (error) {
+	         response.status = 400;
+	         response.body = {
+	            success: false,
+	            message: `Error: ${error}`,
+	         };
+	      }
+
+	   } catch(error) {
+	      
+	      if (!request.hasBody) {
+	         response.status = 400;
+	         response.body = {
+	            success: false,
+	            message: "No data provided",
+	         };
+	      }
+	   }
+
+	},
+	getCourses: async(
+		{ request, response }: {request: any, response: any}
+	) => {
+
+
+		try {
+
+			try {
+
+				const body = await request.body();
+				const values = await body.value;
+
+				const courses = await UserModel.getCourses({});
+
+				response.body = {
+	            success: true,
+	            data: courses,
+	         };
+
+
+			} catch(e) {
+				//console.log(e);
+
+				response.status = 400;
+				response.body = {
+					success: false,
+					message: `Error: ${e}`,
+				};
+			
+			}
+
+		} catch(e) {
+
+			if (!request.hasBody) {
+	         response.status = 400;
+	         response.body = {
+	            success: false,
+	            message: "No data provided",
+	         };
+	      }
+		
+
+		}
+
+
+	},
+	getYearLevels: async(
+		{ request, response }: {request: any, response: any}
+	) => {
+
+
+		try {
+
+			try {
+
+				const body = await request.body();
+				const values = await body.value;
+
+				const yearlevels = await UserModel.getYearLevels({});
+
+				response.body = {
+	            success: true,
+	            data: yearlevels,
+	         };
+
+
+			} catch(e) {
+				//console.log(e);
+
+				response.status = 400;
+				response.body = {
+					success: false,
+					message: `Error: ${e}`,
+				};
+			
+			}
+
+		} catch(e) {
+
+			if (!request.hasBody) {
+	         response.status = 400;
+	         response.body = {
+	            success: false,
+	            message: "No data provided",
+	         };
+	      }
+		
+
+		}
+
+
+	},
+	getSections: async(
+		{ request, response }: {request: any, response: any}
+	) => {
+
+
+		try {
+
+			try {
+
+				const body = await request.body();
+				const values = await body.value;
+
+				const sections = await UserModel.getSections({});
+
+				response.body = {
+	            success: true,
+	            data: sections,
+	         };
+
+
+			} catch(e) {
+				//console.log(e);
+
+				response.status = 400;
+				response.body = {
+					success: false,
+					message: `Error: ${e}`,
+				};
+			
+			}
+
+		} catch(e) {
+
+			if (!request.hasBody) {
+	         response.status = 400;
+	         response.body = {
+	            success: false,
+	            message: "No data provided",
+	         };
+	      }
+		
+
+		}
+
+
+	},
+	getStudents: async(
+		{ request, response }: {request: any, response: any}
+	) => {
+
+
+		try {
+
+			try {
+
+				const body = await request.body();
+				const values = await body.value;
+
+				const students = await UserModel.getStudents({});
+
+				response.body = {
+	            success: true,
+	            data: students,
+	         };
+
+
+			} catch(e) {
+				//console.log(e);
+
+				response.status = 400;
+				response.body = {
+					success: false,
+					message: `Error: ${e}`,
+				};
+			
+			}
+
+		} catch(e) {
+
+			if (!request.hasBody) {
+	         response.status = 400;
+	         response.body = {
+	            success: false,
+	            message: "No data provided",
+	         };
+	      }
+		
+
+		}
+
+
+	},
+	deleteStudent: async(
+		{ params, response }: { params: { id: string }; response: any },
+	) => {
+
+		try {
+
+
+			await UserModel.deleteStudentById(
+	        { id: Number(params.id) },                         
+	      );
+
+         response.body = {
+            success: true,
+            message: "Deleted student",
+         };
+
+
+		} catch(error) {
+
+			response.status = 500;
+         response.body = {
+            success: false,
+            message: "Error deleting student",
+         };
+
+
+		}
+
+	},
+	updateStudentById: async (
+      { params, request, response }: {
+         params: { id: string };
+         request: any;
+         response: any;
+      },
+   ) => {
+
+
+      try {
+      
+         
+         // if todo found then update todo
+         const body = await request.body();
+         const values = await body.value;
+         
+         const updatedRows = await UserModel.updateStudentById({
+            ...values,
+            id: Number(params.id)
+         });
+
+         response.status = 200;
+         response.body = {
+            success: true,
+            message: `Successfully updated ${updatedRows} row(s)`,
+         };
+      
+
+      } catch (error) {
+
+         response.status = 400;
+         response.body = {
+            success: false,
+            message: `Error: ${error}`,
+         };
+
+      }
+
+
+   },
+   getOrganizations: async(
+		{ request, response }: {request: any, response: any}
+	) => {
+
+
+		try {
+
+			try {
+
+				const body = await request.body();
+				const values = await body.value;
+
+				const organizations = await UserModel.getOrganizations({});
+
+				response.body = {
+	            success: true,
+	            data: organizations,
+	         };
+
+
+			} catch(e) {
+				//console.log(e);
+
+				response.status = 400;
+				response.body = {
+					success: false,
+					message: `Error: ${e}`,
+				};
+			
+			}
+
+		} catch(e) {
+
+			if (!request.hasBody) {
+	         response.status = 400;
+	         response.body = {
+	            success: false,
+	            message: "No data provided",
+	         };
+	      }
+		
+
+		}
+
+
 	}
+
 
 
 }

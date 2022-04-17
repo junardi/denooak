@@ -15,7 +15,15 @@ router
    .post("/file-upload", userController.uploadFile)
    .post("/get-files", userController.getFiles)
    .get("/download-file/:id", userController.downloadFile)
-   .delete("/delete-file/:id", userController.deleteFile);
+   .delete("/delete-file/:id", userController.deleteFile)
+   .post("/add-student", userController.addStudent)
+   .post("/get-courses", userController.getCourses)
+   .post("/get-year-levels", userController.getYearLevels)
+   .post("/get-sections", userController.getSections)
+   .post("/get-students", userController.getStudents)
+   .delete("/delete-student/:id", userController.deleteStudent)
+   .put("/update-student/:id", userController.updateStudentById)
+   .post("/get-organizations", userController.getOrganizations);
 
 
 
